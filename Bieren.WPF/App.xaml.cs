@@ -70,6 +70,8 @@ namespace Bieren.WPF
             services.AddSingleton<MainWindow>();
             services.AddTransient<MainViewModel>();
             services.AddTransient<BierenViewModel>();
+            services.AddTransient<AandelenViewModel>();
+            
             //services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
             //services.AddSingleton<IAuthenticationService, AuthenticationService>();
@@ -77,6 +79,15 @@ namespace Bieren.WPF
             //services.AddTransient<AuthenticationService>();
             //services.AddSingleton<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IDataService, BierenDataService>();
+            services.AddHttpClient("stockMarket", c =>
+            {
+                c.BaseAddress = new Uri("https://financialmodelingprep.com/api/v3/");
+                c.DefaultRequestHeaders.Add("Accept", "application/json");
+
+            });
+            services.AddTransient<IMyHttpService, MyHttpService>();
+            services.AddTransient<IStockExchangeService, StockExchangeService>();
+         
         }
 
         protected override async void OnStartup(StartupEventArgs e)
@@ -90,6 +101,8 @@ namespace Bieren.WPF
             await _host.StartAsync();
             var mainWindow = _host.Services.GetRequiredService<MainWindow>();
             MainViewModel mainVm = _host.Services.GetRequiredService<MainViewModel>();
+            AandelenViewModel aandelenVM = _host.Services.GetRequiredService<AandelenViewModel>();
+            mainVm.AandelenVM = aandelenVM;
             mainWindow.DataContext = mainVm;
 
             mainWindow.Show();

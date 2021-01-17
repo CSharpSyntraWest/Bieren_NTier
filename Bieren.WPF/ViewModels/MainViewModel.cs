@@ -21,6 +21,7 @@ namespace Bieren.WPF.ViewModels
         private IMapper _mapper;
         private ReadOnlyCollection<CommandViewModel> _commands;
         private ObservableCollection<WorkspaceViewModel> _workspaces;
+        private AandelenViewModel _aandelenVM;
         //private IDialogService _dialogService;
         //private IDataService _dataService;
 
@@ -88,6 +89,13 @@ namespace Bieren.WPF.ViewModels
                     _workspaces.CollectionChanged += this.OnWorkspacesChanged;
                 }
                 return _workspaces;
+            }
+        }
+
+        public AandelenViewModel AandelenVM {
+            get { return _aandelenVM; }
+            set { 
+                OnPropertyChanged(ref _aandelenVM, value); 
             }
         }
 

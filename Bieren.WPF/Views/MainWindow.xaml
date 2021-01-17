@@ -33,7 +33,7 @@
                       Header="Navigatie"
                       Style="{StaticResource MainBierenStyle}"
           />
-                    <views:AandeelDetailsView DockPanel.Dock ="Bottom" Height="120"/>
+                    <views:AandeelDetailsView DataContext ="{Binding AandelenVM}" DockPanel.Dock ="Bottom" Height="120"/>
                 </DockPanel>
             </Border>
 
