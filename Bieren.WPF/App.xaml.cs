@@ -16,6 +16,10 @@ using System.Windows;
 using Bieren.WPF.Automapper;
 using Bieren.DataLayer.Repositories;
 using Bieren.BusinessLayer.Services;
+using Bieren.DataLayer.Models;
+using Microsoft.EntityFrameworkCore;
+using System.IO;
+using Microsoft.Extensions.Configuration;
 
 namespace Bieren.WPF
 {
@@ -26,6 +30,7 @@ namespace Bieren.WPF
     {
         private readonly IHost _host;
         private readonly IMapper _mapper;
+        private IConfiguration _configuration;
         public App()
         {
             var automapperConfig = new AutomapperConfig();
@@ -34,8 +39,18 @@ namespace Bieren.WPF
                 cfg.AddProfile(automapperConfig);
             });
             _mapper = autoMapperconfiguration.CreateMapper();
-            
-            //services.AddAutoMapper(mapperConfig => mapperConfig.AddProfiles(GetType().Assembly))
+
+            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            string baseDir = Directory.GetParent(AppContext.BaseDirectory).FullName;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(baseDir)
+                .AddJsonFile($"appsettings.json", true, true)
+                .AddJsonFile($"appsettings.{env}.json", true, true)
+                .AddEnvironmentVariables();
+
+            _configuration = builder.Build();
+           
+
             _host = Host.CreateDefaultBuilder()
                 .ConfigureLogging(logging =>
                 {
@@ -55,12 +70,11 @@ namespace Bieren.WPF
         }
         private void ConfigureServices(IServiceCollection services)
         {
-
-            //services.AddAutoMapper(mapperConfig => mapperConfig.AddProfiles(GetType().Assembly));
-            //services.AddDbContext<BierenDbContext>(options =>
-            //{
-            //    options.UseSqlServer(ConfigurationManager.ConnectionStrings["BierenDbCon"].ConnectionString);//
-            //});
+            string connString = _configuration.GetConnectionString("BierenConnection");
+            services.AddDbContext<BierenDbContext>(options =>
+            {
+                options.UseSqlServer(connString);
+            });
             services.AddSingleton(_mapper);
             services.AddTransient<IDialogService, DialogService>();
             services.AddTransient<IFileDialogService, FileDialogWindow>();

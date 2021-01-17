@@ -13,7 +13,6 @@ namespace Bieren.WPF.Automapper
 {
     public class AutomapperConfig : Profile
     {
-
         public AutomapperConfig()
         {
             CreateMap<BO_User, User>();
