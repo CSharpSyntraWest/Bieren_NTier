@@ -11,9 +11,11 @@ using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using System.Windows;
 using Bieren.WPF.Automapper;
 using Bieren.DataLayer.Repositories;
+using Bieren.BusinessLayer.Services;
 
 namespace Bieren.WPF
 {
@@ -23,7 +25,7 @@ namespace Bieren.WPF
     public partial class App : Application
     {
         private readonly IHost _host;
-
+        private readonly IMapper _mapper;
         public App()
         {
             var automapperConfig = new AutomapperConfig();
@@ -31,24 +33,35 @@ namespace Bieren.WPF
             {
                 cfg.AddProfile(automapperConfig);
             });
-            IMapper mapper = autoMapperconfiguration.CreateMapper();
+            _mapper = autoMapperconfiguration.CreateMapper();
             
             //services.AddAutoMapper(mapperConfig => mapperConfig.AddProfiles(GetType().Assembly))
             _host = Host.CreateDefaultBuilder()
+                .ConfigureLogging(logging =>
+                {
+                    // clear default logging providers
+                    logging.ClearProviders();
+                    // add built-in providers manually, as needed 
+                    logging.AddConsole();
+                    //logging.AddDebug();
+                    logging.AddEventLog();
+                    //logging.AddEventSourceLogger();
+                })
                 .ConfigureServices((context, services) => {
                     ConfigureServices(services);
-                    services.AddSingleton(mapper);
+                    
                 })
                 .Build();
         }
         private void ConfigureServices(IServiceCollection services)
         {
-            
+
             //services.AddAutoMapper(mapperConfig => mapperConfig.AddProfiles(GetType().Assembly));
             //services.AddDbContext<BierenDbContext>(options =>
             //{
             //    options.UseSqlServer(ConfigurationManager.ConnectionStrings["BierenDbCon"].ConnectionString);//
             //});
+            services.AddSingleton(_mapper);
             services.AddTransient<IDialogService, DialogService>();
             services.AddTransient<IFileDialogService, FileDialogWindow>();
             services.AddScoped<IBierenRepository, BierenRepository>();

@@ -34,6 +34,9 @@ namespace Bieren.WPF.Automapper
             CreateMap<DbBrouwer, BO_Brouwer>();
             CreateMap<BO_Bier, DbBier>();
             CreateMap<DbBier, BO_Bier>();
+
+            CreateMap<BO_Aandeel, Aandeel>();
+            CreateMap<Aandeel, BO_Aandeel>();
         }
 
     }

@@ -1,7 +1,8 @@
 ﻿
+using Bieren.BusinessLayer.Models;
 using System.Collections.Generic;
 
-namespace Bieren.BusinessLayer.Models
+namespace Bieren.BusinessLayer.Services
 {
     public interface IDataService
     {

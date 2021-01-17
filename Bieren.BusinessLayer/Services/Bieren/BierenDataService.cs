@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Bieren.BusinessLayer.Models;
 using Bieren.DataLayer.Models;
 using Bieren.DataLayer.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 
-namespace Bieren.BusinessLayer.Models
+namespace Bieren.BusinessLayer.Services
 {
     public class BierenDataService : IDataService
     {

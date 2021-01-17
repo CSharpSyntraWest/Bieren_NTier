@@ -1,4 +1,5 @@
 ﻿using Bieren.BusinessLayer.Models;
+using Bieren.BusinessLayer.Services;
 using Bieren.WPF.Services;
 using Bieren.WPF.Utilities;
 using System;
