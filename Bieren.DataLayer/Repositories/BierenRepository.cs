@@ -23,14 +23,24 @@ namespace Bieren.DataLayer.Repositories
 
         public IList<DbBier> GetAll()
         { 
-            return  _context.DbBiers.Include(b => b.SoortNrNavigation).Include(b =>b.BrouwerNrNavigation).ToList();
+            var dbbieren=  _context.DbBiers.Include(b => b.SoortNrNavigation).Include(b =>b.BrouwerNrNavigation).ToList();
+            return dbbieren;
+        }
+        private void SaveChanges()
+        {
+            _context.SaveChanges();
+            foreach (var entity in _context.ChangeTracker.Entries())
+            {
+                entity.State = EntityState.Detached;
+            }
         }
         public DbBier Add(DbBier bier)
         {
             DbBier dbBier = _context.DbBiers.Add(bier).Entity;
-            _context.SaveChanges();
+            SaveChanges();
             return dbBier;
         }
+
         public DbBier Update(DbBier bier)
         {
             DbBier dbBier = FindById(bier.BierNr);
@@ -38,7 +48,7 @@ namespace Bieren.DataLayer.Repositories
             if (dbBier == null) throw new ArgumentNullException($"bier met BierNr={bier.BierNr} niet gevonden");
       
             _context.DbBiers.Update(bier);
-            _context.SaveChanges();
+            SaveChanges();
             return dbBier;
         }
         public DbBier Remove(DbBier bier)
@@ -48,7 +58,7 @@ namespace Bieren.DataLayer.Repositories
             if (dbBier == null) throw new ArgumentNullException($"bier met BierNr={bier.BierNr} niet gevonden");
 
             _context.DbBiers.Remove(bier);
-            _context.SaveChanges();
+            SaveChanges();
             return dbBier;
         }
         public DbBier FindByName(string naam)

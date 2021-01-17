@@ -150,12 +150,14 @@ namespace Bieren.BusinessLayer.Services
 
         public IList<BO_Bier> VerwijderBier(BO_Bier bier)
         {
-            throw new NotImplementedException();
+            DbBier dbbier = _bierenRepository.Remove(_mapper.Map<DbBier>(bier));
+            return GeefAlleBieren();
         }
 
-        public IList<BO_Brouwer> VerwijderBrouwer(BO_Brouwer selectedBrouwer)
+        public IList<BO_Brouwer> VerwijderBrouwer(BO_Brouwer brouwer)
         {
-            throw new NotImplementedException();
+            DbBrouwer dbbrouwer = _brouwersRepository.Remove(_mapper.Map<DbBrouwer>(brouwer));
+            return GeefAlleBrouwers();
         }
 
         public IList<BO_BierSoort> VoegBierSoortToe(BO_BierSoort biersoort)
@@ -175,22 +177,28 @@ namespace Bieren.BusinessLayer.Services
 
         public IList<BO_Bier> VoegBierToe(BO_Bier bier)
         {
-            throw new NotImplementedException();
+            //bier.BierNr = 0;
+            DbBier dbBier = _bierenRepository.Add(_mapper.Map<DbBier>(bier));
+            return GeefAlleBieren();
         }
 
         public IList<BO_Brouwer> VoegBrouwerToe(BO_Brouwer brouwer)
         {
-            throw new NotImplementedException();
+            brouwer.BrouwerNr = 0;
+            DbBrouwer dbBrouwer = _brouwersRepository.Add(_mapper.Map<DbBrouwer>(brouwer));
+            return GeefAlleBrouwers();
         }
 
-        public void WijzigBier(BO_Bier bier)
+        public IList<BO_Bier> WijzigBier(BO_Bier bier)
         {
-            throw new NotImplementedException();
+            DbBier DbBier = _bierenRepository.Update(_mapper.Map<DbBier>(bier));
+            return GeefAlleBieren();
         }
 
-        public void WijzigBrouwer(BO_Brouwer selectedBrouwer)
+        public IList<BO_Brouwer> WijzigBrouwer(BO_Brouwer brouwer)
         {
-            throw new NotImplementedException();
+            DbBrouwer dbBrouwer = _brouwersRepository.Update(_mapper.Map<DbBrouwer>(brouwer));
+            return GeefAlleBrouwers();
         }
 
         public IList<BO_BierSoort> WijzigBierSoort(BO_BierSoort biersoort)
@@ -211,7 +219,7 @@ namespace Bieren.BusinessLayer.Services
         public IList<BO_BierSoort> VerwijderBierSoort(BO_BierSoort biersoort)
         {
             DbSoort dbBierSoort = _bierSoortenRepository.Remove(_mapper.Map<DbSoort>(biersoort));
-           
+
             return GeefAlleBierSoorten();
             //using (BierenDbContext db = new BierenDbContext())
             //{

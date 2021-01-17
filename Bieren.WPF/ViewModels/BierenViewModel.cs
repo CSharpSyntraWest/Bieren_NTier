@@ -1,4 +1,5 @@
 ﻿
+using AutoMapper;
 using Bieren.BusinessLayer.Models;
 using Bieren.BusinessLayer.Services;
 using Bieren.WPF.Models;
@@ -28,24 +29,32 @@ namespace Bieren.WPF.ViewModels
         private BierSoort _selectedBierSoort;
         private Brouwer _selectedBrouwer;
         private Bier _selectedBier;
+        private IMapper _mapper;
 
-        public BierenViewModel(IDataService dataService, IDialogService dialogService, IFileDialogService fileDialogService) : base(dataService, dialogService, fileDialogService)
+        public BierenViewModel(IDataService dataService, IDialogService dialogService, IFileDialogService fileDialogService,IMapper mapper) : base(dataService, dialogService, fileDialogService)
         {
             base.DisplayName = "Bieren";
-
+            _mapper = mapper;
             //_fileDialog = fileDialogService;
             //_dialogService = dialogService;
             //_dataService = dataService;
-            Bieren = new ObservableCollection<Bier>(ObjectConverter.BO_BierenToBieren(dataService.GeefAlleBieren()));
-            BierSoorten = new ObservableCollection<BierSoort>(ObjectConverter.BO_BierSoortenToBierSoorten(dataService.GeefAlleBierSoorten()));           
-            if(Brouwers == null)
+            //Bieren = new ObservableCollection<Bier>(ObjectConverter.BO_BierenToBieren(dataService.GeefAlleBieren()));
+            Bieren = new ObservableCollection<Bier>(_mapper.Map<List<Bier>>(dataService.GeefAlleBieren()));
+            //BierSoorten = new ObservableCollection<BierSoort>(ObjectConverter.BO_BierSoortenToBierSoorten(dataService.GeefAlleBierSoorten()));           
+            BierSoorten = new ObservableCollection<BierSoort>(_mapper.Map<List<BierSoort>>(dataService.GeefAlleBierSoorten()));
+            if (Brouwers == null)
             {
-                Brouwers = new ObservableCollection<Brouwer>(ObjectConverter.BO_BrouwersToBrouwers(dataService.GeefAlleBrouwers()));
+                //Brouwers = new ObservableCollection<Brouwer>(ObjectConverter.BO_BrouwersToBrouwers(dataService.GeefAlleBrouwers()));
+                Brouwers = new ObservableCollection<Brouwer>(_mapper.Map<List<Brouwer>>(dataService.GeefAlleBrouwers()));
+            }
+            if (Bieren != null && Bieren.Count > 0)
+            {
+                SelectedBier = Bieren[0];
             }
             if (SelectedBier != null)
             {
-                SelectedBierSoort = SelectedBier.BierSoort;
-                SelectedBrouwer = SelectedBier.Brouwer;
+                SelectedBierSoort = BierSoorten.Where(s => s.SoortNr== SelectedBier.BierSoort.SoortNr).SingleOrDefault();
+                SelectedBrouwer = Brouwers.Where(b => b.BrouwerNr == SelectedBier.Brouwer.BrouwerNr).SingleOrDefault();
             }
             AddBierCommand = new RelayCommand(VoegBierToe);
             UpdateBierCommand = new RelayCommand(WijzigBierGegevens);
@@ -53,30 +62,30 @@ namespace Bieren.WPF.ViewModels
             //BrowseImageCommand = new RelayCommand(BrowseImage);
             OpenInputDialogCommand = new RelayCommand(OpenInputDialogBierSoort);
 
-            CollectionView bierenView = (CollectionView)CollectionViewSource.GetDefaultView(Bieren);
-            bierenView.Filter = BierenFilter;
+            //CollectionView bierenView = (CollectionView)CollectionViewSource.GetDefaultView(Bieren);
+            //bierenView.Filter = BierenFilter;
         }
 
 
 
-        private string _filterText;
-        public string FilterText
-        {
-            get { return _filterText; }
-            set
-            {
-                OnPropertyChanged(ref _filterText, value);
-                //TO REFRESH VAN VIEW
-                CollectionViewSource.GetDefaultView(Bieren).Refresh();
-            }
-        }
-        private bool BierenFilter(object bier)
-        {
-            if (String.IsNullOrEmpty(FilterText))
-                return true;
-            else
-                return ((bier as Bier).Naam.Contains(FilterText, StringComparison.OrdinalIgnoreCase));
-        }
+        //private string _filterText;
+        //public string FilterText
+        //{
+        //    get { return _filterText; }
+        //    set
+        //    {
+        //        OnPropertyChanged(ref _filterText, value);
+        //        //TO REFRESH VAN VIEW
+        //        CollectionViewSource.GetDefaultView(Bieren).Refresh();
+        //    }
+        //}
+        //private bool BierenFilter(object bier)
+        //{
+        //    if (String.IsNullOrEmpty(FilterText))
+        //        return true;
+        //    else
+        //        return ((bier as Bier).Naam.Contains(FilterText, StringComparison.OrdinalIgnoreCase));
+        //}
         private void OpenInputDialogBierSoort()
         {
             string bierSoort =null;
@@ -94,11 +103,11 @@ namespace Bieren.WPF.ViewModels
         }
 
         private void VoegBierSoortToe(string bierSoort)
-        {
-            //Dataservice aanroepen om een biersoort toe te voegen
-            
+        {           
             BierSoort biersoort = new BierSoort() { SoortNaam = bierSoort };
-            BierSoorten = new ObservableCollection<BierSoort>(ObjectConverter.BO_BierSoortenToBierSoorten(_dataService.VoegBierSoortToe(ObjectConverter.BiersoortToBO_Biersoort(biersoort))));
+            // BierSoorten = new ObservableCollection<BierSoort>(ObjectConverter.BO_BierSoortenToBierSoorten(_dataService.VoegBierSoortToe(ObjectConverter.BiersoortToBO_Biersoort(biersoort))));
+            //Dataservice aanroepen om een biersoort toe te voegen
+            BierSoorten = new ObservableCollection<BierSoort>(_mapper.Map<List<BierSoort>>((_dataService.VoegBierSoortToe(_mapper.Map<BO_BierSoort>(biersoort)))));
             SelectedBier.BierSoort = BierSoorten[BierSoorten.Count - 1];
         }
 
@@ -125,7 +134,8 @@ namespace Bieren.WPF.ViewModels
             Debug.WriteLine(result);
             if(result== DialogResults.Yes)
             {
-                Bieren = new ObservableCollection<Bier>(ObjectConverter.BO_BierenToBieren(_dataService.VerwijderBier(ObjectConverter.BierToBO_Bier(SelectedBier))));
+                // Bieren = new ObservableCollection<Bier>(ObjectConverter.BO_BierenToBieren(_dataService.VerwijderBier(ObjectConverter.BierToBO_Bier(SelectedBier))));
+                Bieren = new ObservableCollection<Bier>(_mapper.Map<List<Bier>>(_dataService.VerwijderBier(_mapper.Map<BO_Bier>(SelectedBier))));
                 if (_bieren.Count > 0) SelectedBier = _bieren[0];
             }         
         }
@@ -137,8 +147,12 @@ namespace Bieren.WPF.ViewModels
 
         private void VoegBierToe()
         {
-            Bier bier = new Bier() {Naam = "Nieuw Bier" , BierSoort = BierSoorten[0],Brouwer =Brouwers[0]};
-            Bieren = new ObservableCollection<Bier>(ObjectConverter.BO_BierenToBieren(_dataService.VoegBierToe(ObjectConverter.BierToBO_Bier(bier))));
+            SelectedBier = Bieren[Bieren.Count - 2];
+            Bier bier = new Bier() { Naam = "Nieuw Bier", BierSoort =null, Brouwer =null };
+            Bieren.Add(bier);
+            SelectedBier = Bieren[Bieren.Count - 1];
+            //Bieren = new ObservableCollection<Bier>(ObjectConverter.BO_BierenToBieren(_dataService.VoegBierToe(ObjectConverter.BierToBO_Bier(bier))));
+            Bieren = new ObservableCollection<Bier>(_mapper.Map<List<Bier>>(_dataService.VoegBierToe(_mapper.Map<BO_Bier>(bier))));
             SelectedBier = Bieren[Bieren.Count - 1];
         }
 
@@ -164,8 +178,17 @@ namespace Bieren.WPF.ViewModels
         }
         public Bier SelectedBier
         {
-            get { return _selectedBier; }
-            set { OnPropertyChanged(ref _selectedBier, value); }
+            get { 
+                return _selectedBier; 
+            }
+            set { 
+                OnPropertyChanged(ref _selectedBier, value);
+                if (value == null) return;
+                if(SelectedBier.BierSoort != null)
+                    SelectedBierSoort = BierSoorten.Where(s => s.SoortNr == SelectedBier.BierSoort.SoortNr).SingleOrDefault();
+                if (SelectedBier.Brouwer != null)
+                    SelectedBrouwer = Brouwers.Where(b => b.BrouwerNr == SelectedBier.Brouwer.BrouwerNr).SingleOrDefault();
+            }
         }
         public ObservableCollection<BierSoort> BierSoorten
         {
@@ -174,8 +197,12 @@ namespace Bieren.WPF.ViewModels
         }
         public BierSoort SelectedBierSoort
         {
-            get { return _selectedBierSoort; }
-            set { OnPropertyChanged(ref _selectedBierSoort, value); }
+            get { 
+                return _selectedBierSoort; 
+            }
+            set { 
+                OnPropertyChanged(ref _selectedBierSoort, value); 
+            }
         }
 
 

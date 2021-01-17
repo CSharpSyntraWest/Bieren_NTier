@@ -9,8 +9,63 @@
     <StackPanel>
         
         <TextBox Margin="0,0,0,10" Text="{Binding FilterText,UpdateSourceTrigger=PropertyChanged}"/>
-        <DataGrid ItemsSource="{Binding Bieren}" SelectedItem="{Binding SelectedBier}" Height="200" EnableRowVirtualization="True" />
+        <DataGrid ItemsSource="{Binding Bieren}" SelectedItem="{Binding SelectedBier}" Height="200" SelectionChanged="DataGrid_SelectionChanged" />
+        <local:BierDetailsView DataContext="{Binding }"/>
+        <!--<GroupBox Margin="10" Visibility="{Binding SelectedBier, Converter={StaticResource SelectedBierConverter}}">
+            <StackPanel Margin="10">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="6" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
 
-        <local:BierDetailsView DataContext="{Binding}"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Label  Grid.Row="0" Content="Naam:"
+                       HorizontalAlignment="Right" />
+                    <TextBox Text="{Binding SelectedBier.Naam, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" />
+                    <Label Content="Alcohol:"
+                       Grid.Row="2"
+                       HorizontalAlignment="Right" />
+                    <TextBox Text="{Binding SelectedBier.Alcohol, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2"
+                         Grid.Column="2" />
+                    <Label Content="Soort:" Grid.Row="4"
+                       HorizontalAlignment="Right" />
+                    <StackPanel  Grid.Row="4" Grid.Column="2" Orientation ="Horizontal">
+                        <ComboBox Width="150" ItemsSource="{Binding BierSoorten}" SelectedItem="{Binding SelectedBierSoort,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="SoortNaam" Height="26"/>
+                        <Button VerticalAlignment="Top" Height="25"  Margin="10" Width="20"  HorizontalAlignment="Right" Content="..." Command="{Binding OpenInputDialogCommand}"/>
+                    </StackPanel>
+                    <Label Content="Brouwer:" Grid.Row="6"
+                       HorizontalAlignment="Right" />
+                    <ComboBox  Grid.Row="6" Grid.Column="2" Width="200" HorizontalAlignment="Left" ItemsSource="{Binding Brouwers}" SelectedItem="{Binding SelectedBrouwer}" DisplayMemberPath="BrNaam"/>
+                    --><!--<Button Grid.Row="0" Grid.Column="3" Style="{StaticResource DetailsFormButton}" Content="Image..." Command="{Binding BrowseImageCommand}"/>-->
+                    <!--<Image Margin="10" Height="100" Width="100" Grid.Row="2" Source="{Binding SelectedBier.ImagePad}" Grid.Column="3" Grid.RowSpan="5"/>--><!--
+                    <StackPanel Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="4" HorizontalAlignment="Center" Orientation="Horizontal" Margin="10">
+                        <Button Style="{StaticResource DetailsFormButton}" Command="{Binding AddBierCommand}" Margin="10"
+                        Grid.Row="8" 
+                        Content="Nieuw" />
+
+                        <Button Style="{StaticResource DetailsFormButton}" Command="{Binding UpdateBierCommand}" Margin="10"
+                        Grid.Row="8" 
+                        Content="Wijzig" />
+                        <Button Style="{StaticResource DetailsFormButton}" Command="{Binding DeleteBierCommand}" Margin="10"
+                        Grid.Row="8" 
+                        Content="Verwijder" />
+                    </StackPanel>
+
+                </Grid>
+            </StackPanel>
+        </GroupBox>-->
     </StackPanel>
 </UserControl>

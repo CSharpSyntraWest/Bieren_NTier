@@ -78,7 +78,7 @@ namespace Bieren.BusinessLayer.Services
             _bieren.Add(bier);
             return _bieren;
         }
-        public void WijzigBier(BO_Bier nieuwBier)
+        public IList<BO_Bier> WijzigBier(BO_Bier nieuwBier)
         {
             //Bier currentBier = _bieren.Single(b => b.BierNr == bier.BierNr); //indien echte dbSet van EF Core aan database gelinkt
             int index = _bieren.IndexOf(nieuwBier);
@@ -86,6 +86,7 @@ namespace Bieren.BusinessLayer.Services
             {
                 _bieren[index] = nieuwBier;
             }
+            return _bieren;
         }
         public IList<BO_Bier> VerwijderBier(BO_Bier bier)
         {
@@ -113,7 +114,7 @@ namespace Bieren.BusinessLayer.Services
             return _brouwers;
         }
 
-        public void WijzigBrouwer(BO_Brouwer nieuwebrouwer)
+        public IList<BO_Brouwer> WijzigBrouwer(BO_Brouwer nieuwebrouwer)
         {
 
             int index = _brouwers.IndexOf(nieuwebrouwer);
@@ -121,6 +122,7 @@ namespace Bieren.BusinessLayer.Services
             {
                 _brouwers[index] = nieuwebrouwer;
             }
+            return _brouwers;
         }
 
         public IList<BO_BierSoort> WijzigBierSoort(BO_BierSoort selectedSoort)

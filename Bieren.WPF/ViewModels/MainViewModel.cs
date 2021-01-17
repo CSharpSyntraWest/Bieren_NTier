@@ -3,6 +3,7 @@ using Bieren.BusinessLayer.Models;
 using Bieren.BusinessLayer.Services;
 using Bieren.WPF.Services;
 using Bieren.WPF.Utilities;
+using Bieren.WPF.ViewModels.Factories;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,6 +23,7 @@ namespace Bieren.WPF.ViewModels
         private ReadOnlyCollection<CommandViewModel> _commands;
         private ObservableCollection<WorkspaceViewModel> _workspaces;
         private AandelenViewModel _aandelenVM;
+        private IBierenViewModelFactory _viewModelFactory;
         //private IDialogService _dialogService;
         //private IDataService _dataService;
 
@@ -29,9 +31,10 @@ namespace Bieren.WPF.ViewModels
 
         #region Constructor
 
-        public MainViewModel(IDataService dataService, IDialogService dialogService, IFileDialogService fileDialogService,IMapper mapper) : base(dataService, dialogService, fileDialogService)
+        public MainViewModel(IBierenViewModelFactory viewModelFactory, IDataService dataService, IDialogService dialogService, IFileDialogService fileDialogService,IMapper mapper) : base(dataService, dialogService, fileDialogService)
         {
             _mapper = mapper;
+            _viewModelFactory = viewModelFactory;
             base.DisplayName = "Bieren";
             //_dialogService = new DialogService();
             //_dataService = new BierenDataService();//new MockDataService();//
@@ -136,7 +139,8 @@ namespace Bieren.WPF.ViewModels
             var workspace = Workspaces.OfType<UsersViewModel>().FirstOrDefault();
             if (workspace == null)
             {
-                workspace = new UsersViewModel(_dataService, _dialogService, _fileDialog);
+                workspace = (UsersViewModel)_viewModelFactory.CreateViewModel(ViewType.Users);
+                //workspace = new UsersViewModel(_dataService, _dialogService, _fileDialog,_mapper);
                 Workspaces.Add(workspace);
             }
             this.SetActiveWorkspace(workspace);
@@ -146,7 +150,8 @@ namespace Bieren.WPF.ViewModels
             var workspace = Workspaces.OfType<BierenViewModel>().FirstOrDefault();
             if (workspace == null)
             {
-                workspace = new BierenViewModel(_dataService, _dialogService, _fileDialog);
+                workspace = (BierenViewModel)_viewModelFactory.CreateViewModel(ViewType.Bieren);
+                //workspace = new BierenViewModel(_dataService, _dialogService, _fileDialog,_mapper);
                 Workspaces.Add(workspace);
             }
             this.SetActiveWorkspace(workspace);
@@ -157,7 +162,8 @@ namespace Bieren.WPF.ViewModels
             var workspace = Workspaces.OfType<SoortenViewModel>().FirstOrDefault();
             if (workspace == null)
             {
-                workspace = new SoortenViewModel(_dataService, _dialogService, _fileDialog, _mapper);
+                workspace = (SoortenViewModel)_viewModelFactory.CreateViewModel(ViewType.BierSoorten);
+               // workspace = new SoortenViewModel(_dataService, _dialogService, _fileDialog, _mapper);
                 Workspaces.Add(workspace);
             }
             this.SetActiveWorkspace(workspace);
@@ -168,7 +174,8 @@ namespace Bieren.WPF.ViewModels
             var workspace = Workspaces.OfType<BrouwersViewModel>().FirstOrDefault();
             if (workspace == null)
             {
-                workspace = new BrouwersViewModel(_dataService,  _dialogService, _fileDialog,_mapper);
+                workspace = (BrouwersViewModel)_viewModelFactory.CreateViewModel(ViewType.Brouwers);
+                //workspace = new BrouwersViewModel(_dataService,  _dialogService, _fileDialog,_mapper);
                 Workspaces.Add(workspace);
             }
             this.SetActiveWorkspace(workspace);

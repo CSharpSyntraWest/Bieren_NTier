@@ -8,7 +8,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel>
         <TextBox Margin="0,0,0,10" Text="{Binding FilterText,UpdateSourceTrigger=PropertyChanged}"/>
-        <DataGrid ItemsSource="{Binding Brouwers}" SelectedItem="{Binding SelectedBrouwer}" Height="200" EnableRowVirtualization="True"/>
+        <DataGrid ItemsSource="{Binding Brouwers}" SelectedItem="{Binding SelectedBrouwer}" Height="200" EnableRowVirtualization="True" SelectionChanged="DataGrid_SelectionChanged"/>
 
         <local:BrouwerDetailsView DataContext="{Binding}"/>
     </StackPanel>

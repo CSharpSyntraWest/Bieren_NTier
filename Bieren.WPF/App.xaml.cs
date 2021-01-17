@@ -20,6 +20,7 @@ using Bieren.DataLayer.Models;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
 using Microsoft.Extensions.Configuration;
+using Bieren.WPF.ViewModels.Factories;
 
 namespace Bieren.WPF
 {
@@ -87,8 +88,17 @@ namespace Bieren.WPF
             services.AddSingleton<MainWindow>();
             services.AddTransient<MainViewModel>();
             services.AddTransient<BierenViewModel>();
-            services.AddTransient<AandelenViewModel>();
-            
+            services.AddTransient<SoortenViewModel>();
+            services.AddTransient<BrouwersViewModel>();
+            services.AddTransient<UsersViewModel>();
+            services.AddSingleton<AandelenViewModel>();
+            services.AddSingleton<CreateViewModel<BierenViewModel>>(services => () => services.GetRequiredService<BierenViewModel>());
+            services.AddSingleton<CreateViewModel<SoortenViewModel>>(services => () => services.GetRequiredService<SoortenViewModel>());
+            services.AddSingleton<CreateViewModel<BrouwersViewModel>>(services => () => services.GetRequiredService<BrouwersViewModel>());
+            services.AddSingleton<CreateViewModel<UsersViewModel>>(services => () => services.GetRequiredService<UsersViewModel>());
+            //services.AddTransient<BierenViewModel>();
+            //services.AddTransient<AandelenViewModel>();
+
             //services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
             //services.AddSingleton<IAuthenticationService, AuthenticationService>();
@@ -104,7 +114,7 @@ namespace Bieren.WPF
             });
             services.AddTransient<IMyHttpService, MyHttpService>();
             services.AddTransient<IStockExchangeService, StockExchangeService>();
-         
+            services.AddSingleton<IBierenViewModelFactory, BierenViewModelFactory>();
         }
 
         protected override async void OnStartup(StartupEventArgs e)

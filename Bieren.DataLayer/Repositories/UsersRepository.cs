@@ -1,4 +1,5 @@
 ﻿using Bieren.DataLayer.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,14 @@ namespace Bieren.DataLayer.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-
+        private void SaveChanges()
+        {
+            _context.SaveChanges();
+            foreach (var entity in _context.ChangeTracker.Entries())
+            {
+                entity.State = EntityState.Detached;
+            }
+        }
         public IList<DbUser> GetAll()
         {
             return _context.DbUsers.ToList();
@@ -23,7 +31,7 @@ namespace Bieren.DataLayer.Repositories
         public DbUser Add(DbUser bier)
         {
             DbUser dbUser = _context.DbUsers.Add(bier).Entity;
-            _context.SaveChanges();
+            SaveChanges();
             return dbUser;
         }
         public DbUser Update(DbUser user)
@@ -33,7 +41,7 @@ namespace Bieren.DataLayer.Repositories
             if (dbUser == null) throw new ArgumentNullException($"user met UserId={user.UserId} niet gevonden");
 
             _context.DbUsers.Update(user);
-            _context.SaveChanges();
+            SaveChanges();
             return dbUser;
         }
         public DbUser Remove(DbUser user)
@@ -43,7 +51,7 @@ namespace Bieren.DataLayer.Repositories
             if (dbUser == null) throw new ArgumentNullException($"user met UserId={user.UserId} niet gevonden");
 
             _context.DbUsers.Remove(user);
-            _context.SaveChanges();
+            SaveChanges();
             return dbUser;
         }
         public DbUser FindByName(string familienaam)

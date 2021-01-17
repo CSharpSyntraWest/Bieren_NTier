@@ -20,6 +20,7 @@ namespace Bieren.WPF.Automapper
             CreateMap<BO_BierSoort, BierSoort>();
             CreateMap<BierSoort, BO_BierSoort>();
             CreateMap<BO_Brouwer, Brouwer>();
+
             CreateMap<Brouwer, BO_Brouwer>();
             CreateMap<BO_Bier, Bier>();
             CreateMap<Bier, BO_Bier>();
@@ -31,8 +32,13 @@ namespace Bieren.WPF.Automapper
             CreateMap<DbSoort, BO_BierSoort>().ForMember(dest => dest.SoortNaam, opt => opt.MapFrom(src => src.Soort));
             CreateMap<BO_Brouwer, DbBrouwer>();
             CreateMap<DbBrouwer, BO_Brouwer>();
-            CreateMap<BO_Bier, DbBier>();
-            CreateMap<DbBier, BO_Bier>();
+            CreateMap<BO_Bier, DbBier>()
+                .ForMember(desc => desc.SoortNrNavigation, do_ => do_.MapFrom(scr => scr.BierSoort))
+                .ForMember(desc => desc.BrouwerNrNavigation, do_ => do_.MapFrom(scr => scr.Brouwer));
+
+            CreateMap<DbBier, BO_Bier>()
+                .ForMember(desc => desc.BierSoort, do_ => do_.MapFrom(scr => scr.SoortNrNavigation))
+                .ForMember(desc => desc.Brouwer, do_=> do_.MapFrom(scr => scr.BrouwerNrNavigation));
 
             CreateMap<BO_Aandeel, Aandeel>();
             CreateMap<Aandeel, BO_Aandeel>();

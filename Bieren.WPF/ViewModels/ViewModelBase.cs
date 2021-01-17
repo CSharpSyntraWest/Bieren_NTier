@@ -6,11 +6,13 @@ using System.Diagnostics;
 
 namespace Bieren.WPF.ViewModels
 {
+    public delegate TViewModel CreateViewModel<TViewModel>() where TViewModel : ViewModelBase;
     /// <summary>
     /// Base class for all ViewModel classes in the application.
     /// It provides support for property change notifications 
     /// and has a DisplayName property.  This class is abstract.
     /// </summary>
+    /// 
     public abstract class ViewModelBase : ObservableObject
     {
         #region Constructor

@@ -1,4 +1,5 @@
 ﻿using Bieren.DataLayer.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,14 @@ namespace Bieren.DataLayer.Repositories
         //{
         //    _context = new BierenDbContext();
         //}
-
+        private void SaveChanges()
+        {
+            _context.SaveChanges();
+            foreach (var entity in _context.ChangeTracker.Entries())
+            {
+                entity.State = EntityState.Detached;
+            }
+        }
         public IList<DbBrouwer> GetAll()
         {
             return _context.DbBrouwers.ToList();
@@ -27,7 +35,7 @@ namespace Bieren.DataLayer.Repositories
         public DbBrouwer Add(DbBrouwer brouwer)
         {
             DbBrouwer dbBrouwer = _context.DbBrouwers.Add(brouwer).Entity;
-            _context.SaveChanges();
+            SaveChanges();
             return dbBrouwer;
         }
         public DbBrouwer Update(DbBrouwer brouwer)
@@ -37,7 +45,7 @@ namespace Bieren.DataLayer.Repositories
             if (dbBrouwer == null) throw new ArgumentNullException($"brouwer met BrouwerNr={brouwer.BrouwerNr} niet gevonden");
 
             _context.DbBrouwers.Update(brouwer);
-            _context.SaveChanges();
+            SaveChanges();
             return dbBrouwer;
         }
         public DbBrouwer Remove(DbBrouwer brouwer)
@@ -47,7 +55,7 @@ namespace Bieren.DataLayer.Repositories
             if (dbBrouwer == null) throw new ArgumentNullException($"brouwer met BrouwerNr={brouwer.BrouwerNr} niet gevonden");
 
             _context.DbBrouwers.Remove(brouwer);
-            _context.SaveChanges();
+            SaveChanges();
             return dbBrouwer;
         }
         public DbBrouwer FindByName(string naam)
