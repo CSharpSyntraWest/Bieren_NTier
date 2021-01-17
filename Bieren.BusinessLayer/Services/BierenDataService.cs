@@ -1,5 +1,6 @@
-﻿using Bieren.DataLayer.Models;
-
+﻿using AutoMapper;
+using Bieren.DataLayer.Models;
+using Bieren.DataLayer.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,39 +12,47 @@ namespace Bieren.BusinessLayer.Models
 {
     public class BierenDataService : IDataService
     {
+        private IBierenRepository _bierenRepository;
+        private IMapper _mapper;
+        public BierenDataService(IBierenRepository bierenRepository, IMapper mapper)
+        {
+            _bierenRepository = bierenRepository;
+            _mapper = mapper;
+        }
         public IList<BO_Bier> GeefAlleBieren()
         {
-            return DbBierenToBieren();
+            //return DbBierenToBieren();
+            return _mapper.Map<List<BO_Bier>>(_bierenRepository.GetAll());
         }
 
-        private IList<BO_Bier> DbBierenToBieren()
-        {
-            IList<BO_Bier> bieren = new List<BO_Bier>();
-            using (BierenDbContext bierenDb = new BierenDbContext())
-            {
-                var dbBieren = bierenDb.DbBiers.Include(b => b.BrouwerNrNavigation).Include(b => b.SoortNrNavigation);
-                foreach (DbBier dbBier in dbBieren)
-                {
-                    BO_Bier bier = DbBierToBier(dbBier);
-                    bieren.Add(bier);
-                }
-            }
-            return bieren;
-        }
+        //private IList<BO_Bier> DbBierenToBieren()
+        //{
+        //    IList<BO_Bier> bieren = new List<BO_Bier>();
+        //    using (BierenDbContext bierenDb = new BierenDbContext())
+        //    {
+        //        var dbBieren = bierenDb.DbBiers.Include(b => b.BrouwerNrNavigation).Include(b => b.SoortNrNavigation);
+        //        foreach (DbBier dbBier in dbBieren)
+        //        {
+        //            BO_Bier bier = DbBierToBier(dbBier);
+        //            bieren.Add(bier);
+        //        }
+        //    }
+        //    return bieren;
+        //}
 
-        private BO_Bier DbBierToBier(DbBier dbBier)
-        {
-            if (dbBier == null) return null;
-            BO_Bier bier = new BO_Bier()
-            {
-                BierNr = dbBier.BierNr,
-                Naam = dbBier.Naam,
-                Alcohol = dbBier.Alcohol,
-                Brouwer = DbBrouwerToBrouwer(dbBier.BrouwerNrNavigation),
-                BierSoort = DbSoortToBierSoort(dbBier.SoortNrNavigation)
-            };
-            return bier;
-        }
+        //private BO_Bier DbBierToBier(DbBier dbBier)
+        //{
+        //    if (dbBier == null) return null;
+        //    BO_Bier bier = new BO_Bier()
+        //    {
+        //        BierNr = dbBier.BierNr,
+        //        Naam = dbBier.Naam,
+        //        Alcohol = dbBier.Alcohol,
+        //        Brouwer = DbBrouwerToBrouwer(dbBier.BrouwerNrNavigation),
+        //        BierSoort = DbSoortToBierSoort(dbBier.SoortNrNavigation)
+        //    };
+        //    return bier;
+        //}
 
         public IList<BO_BierSoort> GeefAlleBierSoorten()
         {
@@ -116,7 +125,7 @@ namespace Bieren.BusinessLayer.Models
                 var dbBieren = db.DbBiers.Where(b => b.BrouwerNr == brouwer.BrouwerNr).Include(b => b.BrouwerNrNavigation);
                 foreach(DbBier dbBier in dbBieren)
                 {
-                    bieren.Add(DbBierToBier(dbBier));
+                    bieren.Add(_mapper.Map<BO_Bier>(dbBier));
                 }
             }
             return bieren;

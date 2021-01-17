@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using Bieren.WPF.Automapper;
+using Bieren.DataLayer.Repositories;
 
 namespace Bieren.WPF
 {
@@ -50,6 +51,8 @@ namespace Bieren.WPF
             //});
             services.AddTransient<IDialogService, DialogService>();
             services.AddTransient<IFileDialogService, FileDialogWindow>();
+            services.AddScoped<IBierenRepository, BierenRepository>();
+            services.AddScoped<IBierSoortenRepository, BierSoortenRepository>();
             services.AddTransient<DialogWindow>();
             services.AddSingleton<MainWindow>();
             services.AddTransient<MainViewModel>();
