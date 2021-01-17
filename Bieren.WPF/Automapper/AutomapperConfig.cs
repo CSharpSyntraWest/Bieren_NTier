@@ -27,8 +27,8 @@ namespace Bieren.WPF.Automapper
 
             CreateMap<BO_User, DbUser>();
             CreateMap<DbUser, BO_User>();
-            CreateMap<BO_BierSoort, DbSoort>();
-            CreateMap<DbSoort, BO_BierSoort>();
+            CreateMap<BO_BierSoort, DbSoort>().ForMember(dest => dest.Soort, opt => opt.MapFrom(src => src.SoortNaam));
+            CreateMap<DbSoort, BO_BierSoort>().ForMember(dest => dest.SoortNaam, opt => opt.MapFrom(src => src.Soort));
             CreateMap<BO_Brouwer, DbBrouwer>();
             CreateMap<DbBrouwer, BO_Brouwer>();
             CreateMap<BO_Bier, DbBier>();

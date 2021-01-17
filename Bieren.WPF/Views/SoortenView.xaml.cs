@@ -22,5 +22,13 @@ namespace Bieren.WPF.Views
         {
             InitializeComponent();
         }
+
+
+        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {           
+            DataGrid dg = (DataGrid)sender;
+            if (dg.SelectedItem == null) return;
+            dg.ScrollIntoView(dg.SelectedItem);
+        }
     }
 }

@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel>
-        <DataGrid IsReadOnly="True" ItemsSource="{Binding Soorten}" SelectedItem="{Binding SelectedSoort}" Height="200" EnableRowVirtualization="True"/>
+        <DataGrid IsReadOnly="True" ItemsSource="{Binding Soorten}" SelectedItem="{Binding SelectedSoort}" Height="200" EnableRowVirtualization="True"  SelectionChanged="DataGrid_SelectionChanged"/>
         <local:SoortDetailsView DataContext="{Binding}"/>
     </StackPanel>
 </UserControl>

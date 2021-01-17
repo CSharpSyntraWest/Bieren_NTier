@@ -157,7 +157,7 @@ namespace Bieren.WPF.ViewModels
             var workspace = Workspaces.OfType<SoortenViewModel>().FirstOrDefault();
             if (workspace == null)
             {
-                workspace = new SoortenViewModel(_dataService, _dialogService, _fileDialog);
+                workspace = new SoortenViewModel(_dataService, _dialogService, _fileDialog, _mapper);
                 Workspaces.Add(workspace);
             }
             this.SetActiveWorkspace(workspace);

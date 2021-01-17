@@ -1,4 +1,5 @@
 ﻿using Bieren.DataLayer.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +16,10 @@ namespace Bieren.DataLayer.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public BierSoortenRepository()
-        {
-            _context = new BierenDbContext();
-        }
+        //public BierSoortenRepository()
+        //{
+        //    _context = new BierenDbContext();
+        //}
 
         public IList<DbSoort> GetAll()
         { 
@@ -27,7 +28,7 @@ namespace Bieren.DataLayer.Repositories
         public DbSoort Add(DbSoort soort)
         {
             DbSoort dbBierSoort = _context.DbSoorts.Add(soort).Entity;
-            _context.SaveChanges();
+            SaveChanges();
             return dbBierSoort;
         }
         public DbSoort Update(DbSoort soort)
@@ -37,7 +38,7 @@ namespace Bieren.DataLayer.Repositories
             if (dbSoort == null) throw new ArgumentNullException($"biersoort met SoortNr={soort.SoortNr} niet gevonden");
       
             _context.DbSoorts.Update(soort);
-            _context.SaveChanges();
+            SaveChanges();
             return dbSoort;
         }
         public DbSoort Remove(DbSoort soort)
@@ -47,12 +48,22 @@ namespace Bieren.DataLayer.Repositories
             if (dbSoort == null) throw new ArgumentNullException($"soort bier met SoortNr={soort.SoortNr} niet gevonden");
 
             _context.DbSoorts.Remove(soort);
-            _context.SaveChanges();
+            SaveChanges();
             return dbSoort;
         }
+
+        private void SaveChanges()
+        {
+            _context.SaveChanges();
+            foreach (var entity in _context.ChangeTracker.Entries())
+            {
+                entity.State = EntityState.Detached;
+            }
+        }
+
         public DbSoort FindByName(string naam)
         {
-            DbSoort dbSoort = _context.DbSoorts.Where(e => e.Soort.ToLower() == naam.ToLower()).FirstOrDefault();
+            DbSoort dbSoort = _context.DbSoorts.AsNoTracking().Where(e => e.Soort.ToLower() == naam.ToLower()).FirstOrDefault();
             return dbSoort;
         }
 

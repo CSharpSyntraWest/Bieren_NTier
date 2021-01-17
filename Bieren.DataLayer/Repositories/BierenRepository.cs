@@ -1,4 +1,5 @@
 ﻿using Bieren.DataLayer.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,14 +16,14 @@ namespace Bieren.DataLayer.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public BierenRepository()
-        {
-            _context = new BierenDbContext();
-        }
+        //public BierenRepository()
+        //{
+        //    _context = new BierenDbContext();
+        //}
 
         public IList<DbBier> GetAll()
         { 
-            return  _context.DbBiers.ToList();
+            return  _context.DbBiers.Include(b => b.SoortNrNavigation).Include(b =>b.BrouwerNrNavigation).ToList();
         }
         public DbBier Add(DbBier bier)
         {
@@ -63,6 +64,10 @@ namespace Bieren.DataLayer.Repositories
             return dbBier;
         }
 
+        public IList<DbBier> GetAllForBrewer(int Id)
+        {
+            return _context.DbBiers.Where(e => e.BrouwerNr == Id).ToList();
+        }
     }
 
 }

@@ -7,6 +7,8 @@ namespace Bieren.DataLayer.Repositories
     {
         IList<DbSoort> GetAll();
         DbSoort Add(DbSoort biersoort);
+        DbSoort Remove(DbSoort biersoort);
+        DbSoort Update(DbSoort biersoort);
         DbSoort FindById(int Id);
         DbSoort FindByName(string naam);
     }

@@ -73,7 +73,7 @@ namespace Bieren.WPF
             string connString = _configuration.GetConnectionString("BierenConnection");
             services.AddDbContext<BierenDbContext>(options =>
             {
-                options.UseSqlServer(connString);
+                options.UseSqlServer(connString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
             services.AddSingleton(_mapper);
             services.AddScoped<BierenDbContext>();
@@ -81,6 +81,8 @@ namespace Bieren.WPF
             services.AddTransient<IFileDialogService, FileDialogWindow>();
             services.AddScoped<IBierenRepository, BierenRepository>();
             services.AddScoped<IBierSoortenRepository, BierSoortenRepository>();
+            services.AddScoped<IBrouwersRepository, BrouwersRepository>();
+            services.AddScoped<IUsersRepository, UsersRepository>();
             services.AddTransient<DialogWindow>();
             services.AddSingleton<MainWindow>();
             services.AddTransient<MainViewModel>();
