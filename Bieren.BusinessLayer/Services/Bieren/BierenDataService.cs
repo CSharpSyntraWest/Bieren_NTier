@@ -15,8 +15,10 @@ namespace Bieren.BusinessLayer.Services
     {
         private IBierenRepository _bierenRepository;
         private IMapper _mapper;
-        public BierenDataService(IBierenRepository bierenRepository, IMapper mapper)
+        private BierenDbContext _db;
+        public BierenDataService(BierenDbContext db, IBierenRepository bierenRepository, IMapper mapper)
         {
+            _db = db;
             _bierenRepository = bierenRepository;
             _mapper = mapper;
         }
@@ -63,14 +65,14 @@ namespace Bieren.BusinessLayer.Services
         private IList<BO_BierSoort> DbSoortenToBierSoorten()
         {
             IList<BO_BierSoort> bierSoorten = new List<BO_BierSoort>();
-            using(BierenDbContext db = new BierenDbContext())
-            {
-                var dbBierSoorten = db.DbSoorts;
+            //using(BierenDbContext db = new BierenDbContext())
+            //{
+                var dbBierSoorten = _db.DbSoorts;
                 foreach (DbSoort dbSoort in dbBierSoorten)
                 {
                     bierSoorten.Add(DbSoortToBierSoort(dbSoort));     
                 }
-            }
+            //}
             return bierSoorten;
         }
         private BO_BierSoort DbSoortToBierSoort(DbSoort dbSoort)
@@ -92,12 +94,12 @@ namespace Bieren.BusinessLayer.Services
         private IList<BO_Brouwer> DbBrouwersToBrouwers()
         {
             IList<BO_Brouwer> brouwers = new List<BO_Brouwer>();
-            using (BierenDbContext db = new BierenDbContext())
-            {
-                List<DbBrouwer> dbBrouwers = db.DbBrouwers.ToList();//.Include(b => b.DbBiers).ToList();
+            //using (BierenDbContext db = new BierenDbContext())
+            //{
+                List<DbBrouwer> dbBrouwers = _db.DbBrouwers.ToList();//.Include(b => b.DbBiers).ToList();
                 foreach (DbBrouwer dbBrouwer in dbBrouwers)
                     brouwers.Add(DbBrouwerToBrouwer(dbBrouwer));
-            }
+            //}
             return brouwers;
         }
 
@@ -121,14 +123,14 @@ namespace Bieren.BusinessLayer.Services
         public IList<BO_Bier> GeefBierenVoorBrouwer(BO_Brouwer brouwer)
         {
             IList<BO_Bier> bieren = new List<BO_Bier>();
-            using (BierenDbContext db = new BierenDbContext())
-            {
-                var dbBieren = db.DbBiers.Where(b => b.BrouwerNr == brouwer.BrouwerNr).Include(b => b.BrouwerNrNavigation);
+            //using (BierenDbContext db = new BierenDbContext())
+            //{
+                var dbBieren = _db.DbBiers.Where(b => b.BrouwerNr == brouwer.BrouwerNr).Include(b => b.BrouwerNrNavigation);
                 foreach(DbBier dbBier in dbBieren)
                 {
                     bieren.Add(_mapper.Map<BO_Bier>(dbBier));
                 }
-            }
+            //}
             return bieren;
         }
 
@@ -144,13 +146,13 @@ namespace Bieren.BusinessLayer.Services
 
         public IList<BO_BierSoort> VoegBierSoortToe(BO_BierSoort biersoort)
         {
-            using (BierenDbContext db = new BierenDbContext())
-            {
+            //using (BierenDbContext db = new BierenDbContext())
+            //{
                 DbSoort dbBierSoort = new DbSoort() { Soort = biersoort.SoortNaam };
-                db.DbSoorts.Add(dbBierSoort);
-                db.SaveChanges();
+                _db.DbSoorts.Add(dbBierSoort);
+                _db.SaveChanges();
                
-            }
+            //}
             return DbSoortenToBierSoorten();
         }
 
@@ -176,25 +178,25 @@ namespace Bieren.BusinessLayer.Services
 
         public IList<BO_BierSoort> WijzigBierSoort(BO_BierSoort selectedSoort)
         {
-            using (BierenDbContext db = new BierenDbContext())
-            {
-                DbSoort dbSoort = db.DbSoorts.Where(s => s.SoortNr == selectedSoort.SoortNr).FirstOrDefault();
+            //using (BierenDbContext db = new BierenDbContext())
+            //{
+                DbSoort dbSoort = _db.DbSoorts.Where(s => s.SoortNr == selectedSoort.SoortNr).FirstOrDefault();
                 dbSoort.Soort = selectedSoort.SoortNaam;
-                db.DbSoorts.Update(dbSoort);
-                db.SaveChanges();
-            }
+                _db.DbSoorts.Update(dbSoort);
+                _db.SaveChanges();
+            //}
 
             return DbSoortenToBierSoorten();
         }
 
         public IList<BO_BierSoort> VerwijderBierSoort(BO_BierSoort selectedSoort)
         {
-            using (BierenDbContext db = new BierenDbContext())
-            {
-                var dbSoort = db.DbSoorts.Where(s => s.SoortNr == selectedSoort.SoortNr).FirstOrDefault();
-                db.DbSoorts.Remove(dbSoort);
-                db.SaveChanges();
-            }
+            //using (BierenDbContext db = new BierenDbContext())
+            //{
+                var dbSoort = _db.DbSoorts.Where(s => s.SoortNr == selectedSoort.SoortNr).FirstOrDefault();
+                _db.DbSoorts.Remove(dbSoort);
+                _db.SaveChanges();
+            //}
 
             return DbSoortenToBierSoorten();
         }
@@ -202,9 +204,9 @@ namespace Bieren.BusinessLayer.Services
         public IList<BO_User> GeefAlleUsers()
         {
             IList<BO_User> users = new List<BO_User>();
-            using (BierenDbContext db = new BierenDbContext())
-            {
-                List<DbUser> dbUsers = db.DbUsers.ToList();
+            //using (BierenDbContext db = new BierenDbContext())
+            //{
+                List<DbUser> dbUsers = _db.DbUsers.ToList();
                 foreach(DbUser dbuser in dbUsers)
                 {
                     BO_User user = new BO_User() //Er bestaat een populaire NuGet Package:  AutoMapper (niet altijd gemakkelijk om te configureren)
@@ -217,7 +219,7 @@ namespace Bieren.BusinessLayer.Services
                     };
                     users.Add(user);
                 }
-            }
+            //}
             return users;
         }
     }

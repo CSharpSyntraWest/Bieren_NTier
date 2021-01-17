@@ -76,6 +76,7 @@ namespace Bieren.WPF
                 options.UseSqlServer(connString);
             });
             services.AddSingleton(_mapper);
+            services.AddScoped<BierenDbContext>();
             services.AddTransient<IDialogService, DialogService>();
             services.AddTransient<IFileDialogService, FileDialogWindow>();
             services.AddScoped<IBierenRepository, BierenRepository>();
