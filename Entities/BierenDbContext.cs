@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using System.Configuration;
 #nullable disable
 
-namespace Bieren.DataLayer.Models
+namespace Entities.Models
 {
     public partial class BierenDbContext : DbContext
     {
@@ -19,10 +19,10 @@ namespace Bieren.DataLayer.Models
            // _connString = ConfigurationManager.ConnectionStrings["BierenDbCon"].ConnectionString;
         }
 
-        public virtual DbSet<DbBier> DbBiers { get; set; }
-        public virtual DbSet<DbBrouwer> DbBrouwers { get; set; }
-        public virtual DbSet<DbSoort> DbSoorts { get; set; }
-        public virtual DbSet<DbUser> DbUsers { get; set; }
+        public virtual DbSet<Bier> Bieren { get; set; }
+        public virtual DbSet<Brouwer> Brouwers { get; set; }
+        public virtual DbSet<Soort> Soorten { get; set; }
+        public virtual DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -38,11 +38,9 @@ namespace Bieren.DataLayer.Models
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
 
-            modelBuilder.Entity<DbBier>(entity =>
+            modelBuilder.Entity<Bier>(entity =>
             {
-                entity.HasKey(e => e.BierNr)
-            
-                    .HasName("PK_Bieren");
+                entity.HasKey(e => e.BierNr);
 
                 entity.ToTable("DbBier");
 
@@ -50,23 +48,23 @@ namespace Bieren.DataLayer.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.BrouwerNrNavigation)
-                    .WithMany(p => p.DbBiers)
-                    .HasForeignKey(d => d.BrouwerNr)
-                    .HasConstraintName("FK_Bieren_Brouwers");
+                entity.HasOne(d => d.Brouwers)
+                    .WithMany(p => p.Bieren)
+                    .HasForeignKey(d => d.BrouwerNr);
+                // .HasConstraintName("FK_Bieren_Brouwers");
 
-                entity.HasOne(d => d.SoortNrNavigation)
-                    .WithMany(p => p.DbBiers)
-                    .HasForeignKey(d => d.SoortNr)
-                    .HasConstraintName("FK_Bieren_Soorten");
+                entity.HasOne(d => d.Soorten)
+                    .WithMany(p => p.Bieren)
+                    .HasForeignKey(d => d.SoortNr);
+                    //.HasConstraintName("FK_Bieren_Soorten");
                 entity.HasMany(e => e.Users);
 
             });
 
-            modelBuilder.Entity<DbBrouwer>(entity =>
+            modelBuilder.Entity<Brouwer>(entity =>
             {
-                entity.HasKey(e => e.BrouwerNr)
-                    .HasName("PK_Brouwers");
+                entity.HasKey(e => e.BrouwerNr);
+                    //.HasName("PK_Brouwers");
 
                 entity.ToTable("DbBrouwer");
 
@@ -83,22 +81,23 @@ namespace Bieren.DataLayer.Models
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<DbSoort>(entity =>
+            modelBuilder.Entity<Soort>(entity =>
             {
-                entity.HasKey(e => e.SoortNr)
-                    .HasName("PK_Soorten");
+                entity.HasKey(e => e.SoortNr);
+                    //.HasName("PK_Soorten");
 
                 entity.ToTable("DbSoort");
 
-                entity.Property(e => e.Soort)
+                entity.Property(e => e.SoortNaam)
+                    .HasColumnName("Soort")
                     .HasMaxLength(50)
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<DbUser>(entity =>
+            modelBuilder.Entity<User>(entity =>
             {
-                entity.HasKey(e => e.UserId)
-                .HasName("PK_Users");
+                entity.HasKey(e => e.UserId);
+              //  .HasName("PK_Users");
                 entity.Property(e => e.UserId).ValueGeneratedOnAdd();
                 entity.ToTable("DbUser");
                 entity.Property(e => e.Voornaam)

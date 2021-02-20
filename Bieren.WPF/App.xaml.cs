@@ -106,12 +106,13 @@ namespace Bieren.WPF
             //services.AddTransient<AuthenticationService>();
             //services.AddSingleton<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IDataService, BierenDataService>();
-            services.AddHttpClient("stockMarket", c =>
-            {
-                c.BaseAddress = new Uri("https://financialmodelingprep.com/api/v3/");
-                c.DefaultRequestHeaders.Add("Accept", "application/json");
+            services.AddHttpClient();
+            //services.AddHttpClient("stockMarket", c =>
+            //{
+            //    c.BaseAddress = new Uri("https://financialmodelingprep.com/api/v3/");
+            //    c.DefaultRequestHeaders.Add("Accept", "application/json");
 
-            });
+            //});
             services.AddTransient<IMyHttpService, MyHttpService>();
             services.AddTransient<IStockExchangeService, StockExchangeService>();
             services.AddSingleton<IBierenViewModelFactory, BierenViewModelFactory>();

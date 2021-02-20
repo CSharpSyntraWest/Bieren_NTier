@@ -1,0 +1,38 @@
+﻿@model IList<Bier>
+<h2>Bierlijst</h2>
+
+
+<a asp-controller="Bieren"
+   asp-action="Insert"
+   class="linkbutton">Voeg toe</a>
+
+<br />
+<br />
+
+<table border="1">
+    <tr>
+        <th>BierNr</th>
+        <th>Naam</th>
+        <th>Alcohol</th>
+        <th colspan="2">Acties</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+<tr>
+    <td>@item.BierNr</td>
+    <td>@item.Naam</td>
+    <td>@item.Alcohol</td>
+
+    <td>
+        <a asp-controller="bieren"
+           asp-action="Update"
+           asp-route-id="@item.BierNr" class="linkbutton">Wijzig</a>
+    </td>
+    <td>
+        <a asp-controller="bieren"
+           asp-action="Delete"
+           asp-route-id="@item.BierNr" class="linkbutton">Verwijder</a>
+    </td>
+</tr>
+    }
+</table>

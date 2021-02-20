@@ -8,6 +8,5 @@
         public double ChangesPercentage { get; set; }
         public double Change { get; set; }
 
-
     }
 }
