@@ -1,17 +1,18 @@
 ﻿
 using Entities.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Contracts
 {
     public interface IBierenRepository
     {
-        IList<Bier> GetAll();
-        Bier Add(Bier bier);
+        Task<IList<Bier>> GetAllAsync();
+        Task<Bier> AddAsync(Bier bier);
         Bier Remove(Bier bier);
         Bier Update(Bier bier);
         Bier FindById(int Id);
         Bier FindByName(string naam);
-        IList<Bier> GetAllForBrewer(int Id);
+        Task<IList<Bier>> GetAllForBrewerAsync(int Id);
     }
 }

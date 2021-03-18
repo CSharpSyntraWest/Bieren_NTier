@@ -1,4 +1,4 @@
-﻿
+﻿using System.Threading.Tasks;
 using Contracts;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
@@ -19,23 +19,23 @@ namespace Repository
         }
 
 
-        public IList<Bier> GetAll()
+        public async Task<IList<Bier>> GetAllAsync()
         { 
-            var dbbieren=  _context.Bieren.Include(b => b.Soorten).Include(b =>b.Brouwers).ToList();
+            var dbbieren=  await _context.Bieren.Include(b => b.Soorten).Include(b =>b.Brouwers).ToListAsync();
             return dbbieren;
         }
-        private void SaveChanges()
+        private void SaveChangesAsync()
         {
-            _context.SaveChanges();
+            _context.SaveChangesAsync();
             foreach (var entity in _context.ChangeTracker.Entries())
             {
                 entity.State = EntityState.Detached;
             }
         }
-        public Bier Add(Bier bier)
+        public async Task<Bier> AddAsync(Bier bier)
         {
-            Bier dbBier = _context.Bieren.Add(bier).Entity;
-            SaveChanges();
+            Bier dbBier = await _context.Bieren.AddAsync(bier);
+            SaveChangesAsync();
             return dbBier;
         }
 
@@ -46,7 +46,7 @@ namespace Repository
             if (dbBier == null) throw new ArgumentNullException($"bier met BierNr={bier.BierNr} niet gevonden");
       
             _context.Bieren.Update(bier);
-            SaveChanges();
+            SaveChangesAsync();
             return dbBier;
         }
         public Bier Remove(Bier bier)
@@ -56,7 +56,7 @@ namespace Repository
             if (dbBier == null) throw new ArgumentNullException($"bier met BierNr={bier.BierNr} niet gevonden");
 
             _context.Bieren.Remove(bier);
-            SaveChanges();
+            SaveChangesAsync();
             return dbBier;
         }
         public Bier FindByName(string naam)
@@ -67,14 +67,14 @@ namespace Repository
 
         public Bier FindById(int bierId)
         {
-            Bier dbBier = (Bier)_context.Bieren.Find(bierId);
+            Bier dbBier = (Bier)_context.Bieren.FindAsync(bierId);
 
             return dbBier;
         }
 
-        public IList<Bier> GetAllForBrewer(int Id)
+        public async Task<IList<Bier>> GetAllForBrewerAsync(int Id)
         {
-            return _context.Bieren.Where(e => e.BrouwerNr == Id).ToList();
+            return await _context.Bieren.Where(e => e.BrouwerNr == Id).ToListAsync();
         }
     }
 

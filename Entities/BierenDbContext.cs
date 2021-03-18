@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System.Configuration;
+using Entities.Configuration;
 #nullable disable
 
 namespace Entities.Models
@@ -42,7 +43,7 @@ namespace Entities.Models
             {
                 entity.HasKey(e => e.BierNr);
 
-                entity.ToTable("DbBier");
+                entity.ToTable("Bier");
 
                 entity.Property(e => e.Naam)
                     .HasMaxLength(100)
@@ -86,7 +87,7 @@ namespace Entities.Models
                 entity.HasKey(e => e.SoortNr);
                     //.HasName("PK_Soorten");
 
-                entity.ToTable("DbSoort");
+                entity.ToTable("Soort");
 
                 entity.Property(e => e.SoortNaam)
                     .HasColumnName("Soort")
@@ -99,7 +100,7 @@ namespace Entities.Models
                 entity.HasKey(e => e.UserId);
               //  .HasName("PK_Users");
                 entity.Property(e => e.UserId).ValueGeneratedOnAdd();
-                entity.ToTable("DbUser");
+                entity.ToTable("User");
                 entity.Property(e => e.Voornaam)
                     .HasMaxLength(50)
                     .IsUnicode(false); //indien false: varchar(50) indien true: nvarchar(50)
@@ -109,9 +110,15 @@ namespace Entities.Models
                 entity.Property(e => e.Email)
                     .HasMaxLength(20)
                     .IsUnicode(false);
-                entity.Property(e => e.GeboorteDatum).HasColumnType(nameof(System.DateTime));
+                //entity.Property(e => e.GeboorteDatum).HasColumnType("datetime");
                 entity.HasMany(e => e.FavorieteBieren);
             });
+
+            modelBuilder.ApplyConfiguration(new BrouwersConfiguration());
+            modelBuilder.ApplyConfiguration(new BierSoortenConfiguration());
+            modelBuilder.ApplyConfiguration(new BierenConfiguration());
+            modelBuilder.ApplyConfiguration(new UsersConfiguration());
+
         
             OnModelCreatingPartial(modelBuilder);
         }

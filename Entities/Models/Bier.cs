@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 #nullable disable
 
@@ -22,5 +24,14 @@ namespace Entities.Models
 
         public virtual ICollection<User> Users { get; set; }
 
+        public static implicit operator Bier(EntityEntry<Bier> v)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static explicit operator Bier(ValueTask<Bier> v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

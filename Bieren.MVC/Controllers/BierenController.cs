@@ -16,13 +16,26 @@ namespace Bieren.MVC.Controllers
             _repositoryManager = repositoryManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            IList<Bier> model = _repositoryManager.Bier.GetAll();
+            IList<Bier> model = await _repositoryManager.Bier.GetAllAsync();
 
             return View(model);
         }
-       
 
+        public async Task<IActionResult> Insert(Bier model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            else
+            {
+                await _repositoryManager.Bier.AddAsync(model);
+                _repositoryManager.Save();
+            }
+
+            return RedirectToAction(actionName: nameof(Index));
+        }
     }
 }

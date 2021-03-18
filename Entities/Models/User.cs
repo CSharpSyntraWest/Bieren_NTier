@@ -13,7 +13,7 @@ namespace Entities.Models
         public int UserId { get; set; }
         public string Voornaam { get; set; }
         public string Familienaam { get; set; }
-        public DateTime GeboorteDatum { get; set; }
+        public DateTime? GeboorteDatum { get; set; }
         public string Email { get; set; }
         public virtual ICollection<Bier> FavorieteBieren { get; set; }
     }
