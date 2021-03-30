@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Bieren.WPF.ViewModels.Factories.BierenViewModelFactory" BaseTypeListCollapsed="true">
+    <Position X="5.5" Y="2.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAEAAAgAAAAAAAAAAAAIAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>ViewModels\Factories\BierenViewModelFactory.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Bieren.WPF.ViewModels.BierenViewModel" Collapsed="true">
+    <Position X="0.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AhCAxIAQAAAAIBiEAABBAABAAAgAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>ViewModels\BierenViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Bieren.WPF.ViewModels.BrouwersViewModel" Collapsed="true">
+    <Position X="3.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AhCAgAAAAAAAAAAkAAABAABQACQAQAAACAgAAAAAAAE=</HashCode>
+      <FileName>ViewModels\BrouwersViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Bieren.WPF.ViewModels.SoortenViewModel" Collapsed="true">
+    <Position X="2.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACwERAAAQAAAAAAABAAQgAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\SoortenViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Bieren.WPF.ViewModels.UsersViewModel" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAAAAABAAAAAAAAAIAAAIAAAAQAAAA=</HashCode>
+      <FileName>ViewModels\UsersViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Bieren.WPF.ViewModels.WorkspaceViewModel" Collapsed="true">
+    <Position X="1.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAAABAAAIAAEAAAAAAAAQAAAABAAAAAAA=</HashCode>
+      <FileName>ViewModels\WorkspaceViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Bieren.WPF.ViewModels.Factories.IBierenViewModelFactory">
+    <Position X="5.5" Y="1" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Factories\IBierenViewModelFactory.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="Bieren.WPF.ViewModels.Factories.ViewType">
+    <Position X="7.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAwCAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Factories\BierenViewModelFactory.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
